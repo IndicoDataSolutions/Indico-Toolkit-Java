@@ -1,14 +1,5 @@
 [
     {
-        "start": "",
-        "end": "",
-        "label": "should be ignored",
-        "text": "should be ignored",
-        "confidence": {
-            "something else": 0.99
-        }
-    },
-    {
         "start": 0,
         "end": 6,
         "label": "line_date",
