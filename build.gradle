@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+}
+
+group 'com.indico.toolkit'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    implementation 'com.indico:indico-client-java:4.11.1'
+    implementation 'com.google.guava:guava:30.1.1-jre'
+}
+
+test {
+    useJUnitPlatform()
+}
