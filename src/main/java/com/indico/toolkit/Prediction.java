@@ -6,4 +6,5 @@ public class Prediction{
     public String label;
     public String text;
     public Object confidence;
+    public Integer rowIndex = null;
 }
