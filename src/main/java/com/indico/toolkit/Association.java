@@ -10,20 +10,20 @@ import java.util.Collections;
 public class Association{
     public List<Prediction> predictions;
     public List<String> lineItemFields;
-    private List<Prediction> mappedPositions = new ArrayList<Prediction>();
-    private List<Prediction> unmappedPositions = new ArrayList<Prediction>();
+    public List<Prediction> mappedPositions = new ArrayList<Prediction>();
+    public List<Prediction> unmappedPositions = new ArrayList<Prediction>();
 
     public Association(List<Prediction> predictions, List<String> lineItemFields){
         this.predictions = predictions;
         this.lineItemFields = lineItemFields;
     }
 
-    public void getBoundingBoxes(List<Prediction> tokens){
+    public void getBoundingBoxes(List<Token> tokens){
         List<Prediction> preds = this.removeUnneededPredictions(this.predictions);
 
     }
 
-    private List<Prediction> removeUnneededPredictions(List<Prediction> predictions){
+    public List<Prediction> removeUnneededPredictions(List<Prediction> predictions){
         List<Prediction> neededPreds = new ArrayList<>();
         for(Prediction pred: predictions){
             if(this.lineItemFields.contains(pred.label)){
@@ -37,6 +37,14 @@ public class Association{
     }
 
 
+    public static boolean sequencesOverlap(Prediction pred, Token token){
+        if(pred.start < token.doc_offset.end){
+            if(token.doc_offset.start < pred.end){
+                return true;
+            }
+        }
+        return false;
+    }
 
     public int numberPredictions(){
         return this.predictions.size();

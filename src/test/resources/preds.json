@@ -43,5 +43,14 @@
         "confidence": {
             "line_date": 0.99
         }
+    },
+    {
+        "start": 106,
+        "end": 210,
+        "label": "ignore_me",
+        "text": "ignore",
+        "confidence": {
+            "line_date": 0.99
+        }
     }
 ]
