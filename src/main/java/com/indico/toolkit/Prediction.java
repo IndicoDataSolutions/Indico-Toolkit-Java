@@ -7,6 +7,9 @@ public class Prediction implements Comparable<Prediction>{
     public String text;
     public Object confidence;
     public Integer rowIndex = null;
+    public Integer bbTop = null;
+    public Integer bbBot = null;
+    public Integer pageNum = null;
 
     public int getStart(){
         return this.start;

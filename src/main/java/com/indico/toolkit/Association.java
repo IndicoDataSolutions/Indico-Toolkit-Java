@@ -5,7 +5,7 @@ import com.indico.toolkit.Prediction;
 import java.util.List;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.lang.Math;
 import java.util.Collections;
 
 public class Association{
@@ -22,7 +22,32 @@ public class Association{
 
     public void getBoundingBoxes(List<Token> tokens){
         List<Prediction> preds = this.removeUnneededPredictions(this.predictions);
+        preds = Association.sortPredictions(preds);
+        for (Prediction pred: preds) {
+            this.matchPredToToken(pred, tokens);
+            mappedPositions.add(pred);
+        }
+    }
 
+    public void matchPredToToken(Prediction pred, List<Token> tokens){
+        boolean no_match = true;
+        for (Token token: tokens) {
+            boolean overlap = Association.sequencesOverlap(pred, token);
+            if (no_match && overlap){
+                no_match = false;
+                pred.bbTop = token.position.bbTop;
+                pred.bbBot = token.position.bbBot;
+                pred.pageNum = token.page_num;
+            }
+            else if (overlap){
+                pred.bbTop = Math.max(pred.bbTop, token.position.bbTop);
+                pred.bbBot =  Math.max(pred.bbBot, token.position.bbBot);
+                pred.pageNum = token.page_num;
+            }
+            else if (token.doc_offset.start > pred.end) {
+                break;
+            }
+        }
     }
 
     public List<Prediction> removeUnneededPredictions(List<Prediction> predictions){
