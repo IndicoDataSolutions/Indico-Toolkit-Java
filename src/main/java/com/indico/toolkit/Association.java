@@ -3,11 +3,13 @@ package com.indico.toolkit;
 import com.indico.toolkit.Prediction;
 
 import java.util.List;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Collections;
 
 public class Association{
+    private static Object SortPreds;
     public List<Prediction> predictions;
     public List<String> lineItemFields;
     public List<Prediction> mappedPositions = new ArrayList<Prediction>();
@@ -44,6 +46,11 @@ public class Association{
             }
         }
         return false;
+    }
+
+    public static List<Prediction> sortPredictions(List<Prediction> predictions){
+        Collections.sort(predictions);
+        return predictions;
     }
 
     public int numberPredictions(){

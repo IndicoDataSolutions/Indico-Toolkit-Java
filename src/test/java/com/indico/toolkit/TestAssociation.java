@@ -72,4 +72,20 @@ class TestAssociation{
         boolean result = Association.sequencesOverlap(pred, token);
         Assertions.assertEquals(false, result);
     }
+
+    @Test
+    void testSortPredictions(){
+        Prediction firstPred = new Prediction();
+        firstPred.start = 1;
+        firstPred.end = 3;
+        Prediction secondPred = new Prediction();
+        secondPred.start = 4;
+        secondPred.end = 6;
+        List<Prediction> preds = new ArrayList<Prediction>();
+        preds.add(secondPred);
+        preds.add(firstPred);
+        List<Prediction> finalList = Association.sortPredictions(preds);
+        Assertions.assertEquals(1, finalList.get(0).start);
+        Assertions.assertEquals(4, finalList.get(1).start);
+        }
 }
