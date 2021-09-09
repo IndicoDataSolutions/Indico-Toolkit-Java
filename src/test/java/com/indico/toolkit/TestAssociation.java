@@ -13,8 +13,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.lang.Integer;
 import java.lang.reflect.Type;
-import java.lang.Object;
 import com.google.gson.reflect.TypeToken;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -88,4 +88,47 @@ class TestAssociation{
         Assertions.assertEquals(1, finalList.get(0).start);
         Assertions.assertEquals(4, finalList.get(1).start);
         }
+
+    @Test
+    void testSortTokens(){
+        Token firstToken = new Token();
+        firstToken.doc_offset = new DocOffset();
+        firstToken.doc_offset.start = 1;
+        firstToken.doc_offset.end = 3;
+        Token secondToken = new Token();
+        secondToken.doc_offset = new DocOffset();
+        secondToken.doc_offset.start = 4;
+        secondToken.doc_offset.end = 7;
+        List<Token> badorder = new ArrayList<Token>();
+        badorder.add(secondToken);
+        badorder.add(firstToken);
+        List<Token> finalList = Association.sortTokens(badorder);
+        Assertions.assertEquals(1, finalList.get(0).doc_offset.start);
+        Assertions.assertEquals(4, finalList.get(1).doc_offset.start);
+    }
+
+    @Test
+    void testMatchPredToToken(){
+        Association associate = new Association(predictions, line_fields);
+        Prediction firstPred = new Prediction();
+        firstPred.start = 26;
+        firstPred.end = 70;
+        associate.matchPredToToken(firstPred, tokens);
+        Assertions.assertEquals(0, firstPred.pageNum);
+        Assertions.assertEquals(25, firstPred.bbTop);
+        Assertions.assertEquals(105, firstPred.bbBot);
+    }
+
+    @Test
+    void testGetBoundingBoxes() {
+        Association associate = new Association(predictions, line_fields);
+        associate.getBoundingBoxes(tokens);
+        for (Prediction pred : associate.mappedPositions) {
+            Assertions.assertTrue(pred.bbBot instanceof Integer);
+            Assertions.assertTrue(pred.bbTop instanceof Integer);
+            Assertions.assertTrue(pred.pageNum instanceof Integer);
+        }
+        Assertions.assertEquals(1, associate.unmappedPositions.size());
+        Assertions.assertEquals(5, associate.mappedPositions.size());
+    }
 }

@@ -7,9 +7,9 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.lang.Math;
 import java.util.Collections;
+// TODO: test getBoundingBoxes and matchPredToToken
 
 public class Association{
-    private static Object SortPreds;
     public List<Prediction> predictions;
     public List<String> lineItemFields;
     public List<Prediction> mappedPositions = new ArrayList<Prediction>();
@@ -23,6 +23,7 @@ public class Association{
     public void getBoundingBoxes(List<Token> tokens){
         List<Prediction> preds = this.removeUnneededPredictions(this.predictions);
         preds = Association.sortPredictions(preds);
+        tokens = Association.sortTokens(tokens);
         for (Prediction pred: preds) {
             this.matchPredToToken(pred, tokens);
             mappedPositions.add(pred);
@@ -40,9 +41,8 @@ public class Association{
                 pred.pageNum = token.page_num;
             }
             else if (overlap){
-                pred.bbTop = Math.max(pred.bbTop, token.position.bbTop);
+                pred.bbTop = Math.min(pred.bbTop, token.position.bbTop);
                 pred.bbBot =  Math.max(pred.bbBot, token.position.bbBot);
-                pred.pageNum = token.page_num;
             }
             else if (token.doc_offset.start > pred.end) {
                 break;
@@ -76,6 +76,11 @@ public class Association{
     public static List<Prediction> sortPredictions(List<Prediction> predictions){
         Collections.sort(predictions);
         return predictions;
+    }
+
+    public static List<Token> sortTokens(List<Token> tokens){
+        Collections.sort(tokens);
+        return tokens;
     }
 
     public int numberPredictions(){
