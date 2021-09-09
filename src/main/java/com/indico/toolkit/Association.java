@@ -2,18 +2,34 @@ package com.indico.toolkit;
 
 import com.indico.toolkit.Prediction;
 
-import java.util.List;
-import java.util.Arrays;
-import java.util.ArrayList;
+import java.util.*;
 import java.lang.Math;
-import java.util.Collections;
-// TODO: test getBoundingBoxes and matchPredToToken
 
+/**
+ Association
+ Map OCR bounding box positions from tokens to predictions and assign row numbers to predictions
+ Example usage:::
+    Association associate = new Association(List<Prediction> yourPreds, List<String> lineItemLabels);
+    associate.getBoundingBoxes(List<Token> allOcrDocTokens);
+    associate.assignRowNumber();
+
+    // After running methods above:
+    // All predictions line item and non line item
+    List<Prediction> allPreds = associate.getAllPreds();
+    // Just line item predictions
+    List<Prediction> lineItemPreds = associate.getLineItemPreds();
+    // Line item predictions grouped by their rows
+    ArrayList<ArrayList<Prediction>> grouped = associate.getGroupedRows();
+    // Just *non* line item predictions
+    List<Prediction> nonLineItemPreds = associate.getNonLineItemPreds();
+
+ */
 public class Association{
     public List<Prediction> predictions;
     public List<String> lineItemFields;
-    public List<Prediction> mappedPositions = new ArrayList<Prediction>();
-    public List<Prediction> unmappedPositions = new ArrayList<Prediction>();
+    private List<Prediction> mappedPositions = new ArrayList<Prediction>();
+    private List<Prediction> unmappedPositions = new ArrayList<Prediction>();
+
 
     public Association(List<Prediction> predictions, List<String> lineItemFields){
         this.predictions = predictions;
@@ -69,6 +85,37 @@ public class Association{
             }
             pred.rowNumber = rowNum;
         }
+    }
+
+    public List<Prediction> getAllPreds(){
+        List<Prediction> allPreds = new ArrayList<Prediction>();
+        allPreds.addAll(this.mappedPositions);
+        allPreds.addAll(this.unmappedPositions);
+        return allPreds;
+    }
+
+    public List<Prediction> getLineItemPreds(){
+        return this.mappedPositions;
+    }
+
+    public List<Prediction> getNonLineItemPreds(){
+        return this.unmappedPositions;
+    }
+
+    public ArrayList<ArrayList<Prediction>> getGroupedRows(){
+        Hashtable<Integer, ArrayList<Prediction>> grouped = new Hashtable<Integer, ArrayList<Prediction>>();
+        for(Prediction pred: this.mappedPositions){
+            if(grouped.containsKey(pred.rowNumber)){
+                grouped.get(pred.rowNumber).add(pred);
+            }
+            else{
+                ArrayList<Prediction> newRow = new ArrayList<Prediction>();
+                newRow.add(pred);
+                grouped.put(pred.rowNumber, newRow);
+            }
+        }
+        ArrayList<ArrayList<Prediction>> groupedRows = new ArrayList<ArrayList<Prediction>>(grouped.values());
+        return groupedRows;
     }
 
     public List<Prediction> removeUnneededPredictions(List<Prediction> predictions){

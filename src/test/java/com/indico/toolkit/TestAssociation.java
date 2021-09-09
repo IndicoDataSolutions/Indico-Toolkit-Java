@@ -54,7 +54,7 @@ class TestAssociation{
         Association associate = new Association(predictions, line_fields);
         List<Prediction> neededPreds = associate.removeUnneededPredictions(predictions);
         Assertions.assertEquals(5, neededPreds.size());
-        Assertions.assertEquals(1, associate.unmappedPositions.size());
+        Assertions.assertEquals(1, associate.getNonLineItemPreds().size());
     }
 
     @Test
@@ -139,13 +139,13 @@ class TestAssociation{
     void testGetBoundingBoxes() {
         Association associate = new Association(predictions, line_fields);
         associate.getBoundingBoxes(tokens);
-        for (Prediction pred : associate.mappedPositions) {
+        for (Prediction pred : associate.getLineItemPreds()) {
             Assertions.assertTrue(pred.bbBot instanceof Integer);
             Assertions.assertTrue(pred.bbTop instanceof Integer);
             Assertions.assertTrue(pred.pageNum instanceof Integer);
         }
-        Assertions.assertEquals(1, associate.unmappedPositions.size());
-        Assertions.assertEquals(5, associate.mappedPositions.size());
+        Assertions.assertEquals(1, associate.getNonLineItemPreds().size());
+        Assertions.assertEquals(5, associate.getLineItemPreds().size());
     }
 
     @Test
@@ -153,7 +153,7 @@ class TestAssociation{
         Association associate = new Association(predictions, line_fields);
         associate.getBoundingBoxes(tokens);
         associate.assignRowNumber();
-        for (Prediction pred : associate.mappedPositions) {
+        for (Prediction pred : associate.getLineItemPreds()) {
             if(pred.text.contains("row 1")){
                 Assertions.assertEquals(1, pred.rowNumber);
             }
@@ -163,8 +163,10 @@ class TestAssociation{
             else if(pred.text.contains("row 3")){
                 Assertions.assertEquals(3, pred.rowNumber);
         }
-        Assertions.assertEquals(1, associate.unmappedPositions.size());
-        Assertions.assertEquals(5, associate.mappedPositions.size());
+        Assertions.assertEquals(1, associate.getNonLineItemPreds().size());
+        Assertions.assertEquals(5, associate.getLineItemPreds().size());
+        Assertions.assertEquals(6, associate.getAllPreds().size());
+        Assertions.assertEquals(3, associate.getGroupedRows().size());
         }
     }
 }
