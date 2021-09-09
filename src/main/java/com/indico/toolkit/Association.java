@@ -50,6 +50,27 @@ public class Association{
         }
     }
 
+    public void assignRowNumber(){
+        List<Prediction> preds = Association.sortMappedPreds(this.mappedPositions);
+        int minTop = preds.get(0).bbTop;
+        int maxBot = preds.get(0).bbBot;
+        int pageNum = preds.get(0).pageNum;
+        int rowNum = 1;
+        for(Prediction pred: preds){
+            if(pred.bbTop > maxBot || pred.pageNum != pageNum){
+                rowNum ++;
+                pageNum = pred.pageNum;
+                minTop = pred.bbTop;
+                maxBot = pred.bbBot;
+            }
+            else{
+                minTop = Math.min(minTop, pred.bbTop);
+                maxBot = Math.max(maxBot, pred.bbBot);
+            }
+            pred.rowNumber = rowNum;
+        }
+    }
+
     public List<Prediction> removeUnneededPredictions(List<Prediction> predictions){
         List<Prediction> neededPreds = new ArrayList<>();
         for(Prediction pred: predictions){
@@ -81,6 +102,11 @@ public class Association{
     public static List<Token> sortTokens(List<Token> tokens){
         Collections.sort(tokens);
         return tokens;
+    }
+
+    public static List<Prediction> sortMappedPreds(List<Prediction> predictions){
+        Collections.sort(predictions, new PredictionComparator());
+        return predictions;
     }
 
     public int numberPredictions(){

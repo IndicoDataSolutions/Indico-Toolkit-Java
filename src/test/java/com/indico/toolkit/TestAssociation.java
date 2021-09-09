@@ -90,6 +90,22 @@ class TestAssociation{
         }
 
     @Test
+    void testSortMappedPreds(){
+        Prediction firstPred = new Prediction();
+        firstPred.pageNum = 0;
+        firstPred.bbTop = 10;
+        Prediction secondPred = new Prediction();
+        secondPred.pageNum = 1;
+        secondPred.bbTop = 5;
+        List<Prediction> preds = new ArrayList<Prediction>();
+        preds.add(secondPred);
+        preds.add(firstPred);
+        List<Prediction> finalList = Association.sortMappedPreds(preds);
+        Assertions.assertEquals(0, finalList.get(0).pageNum);
+        Assertions.assertEquals(1, finalList.get(1).pageNum);
+    }
+
+    @Test
     void testSortTokens(){
         Token firstToken = new Token();
         firstToken.doc_offset = new DocOffset();
@@ -130,5 +146,25 @@ class TestAssociation{
         }
         Assertions.assertEquals(1, associate.unmappedPositions.size());
         Assertions.assertEquals(5, associate.mappedPositions.size());
+    }
+
+    @Test
+    void testAssignRowNumber() {
+        Association associate = new Association(predictions, line_fields);
+        associate.getBoundingBoxes(tokens);
+        associate.assignRowNumber();
+        for (Prediction pred : associate.mappedPositions) {
+            if(pred.text.contains("row 1")){
+                Assertions.assertEquals(1, pred.rowNumber);
+            }
+            else if(pred.text.contains("row 2")){
+                Assertions.assertEquals(2, pred.rowNumber);
+            }
+            else if(pred.text.contains("row 3")){
+                Assertions.assertEquals(3, pred.rowNumber);
+        }
+        Assertions.assertEquals(1, associate.unmappedPositions.size());
+        Assertions.assertEquals(5, associate.mappedPositions.size());
+        }
     }
 }
