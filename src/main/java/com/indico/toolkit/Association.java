@@ -103,8 +103,8 @@ public class Association{
         return this.unmappedPositions;
     }
 
-    public ArrayList<ArrayList<Prediction>> getGroupedRows(){
-        Hashtable<Integer, ArrayList<Prediction>> grouped = new Hashtable<Integer, ArrayList<Prediction>>();
+    public List<List<Prediction>> getGroupedRows(){
+        Map<Integer, ArrayList<Prediction>> grouped = new Hashtable<>();
         for(Prediction pred: this.mappedPositions){
             if(grouped.containsKey(pred.rowNumber)){
                 grouped.get(pred.rowNumber).add(pred);
@@ -115,7 +115,7 @@ public class Association{
                 grouped.put(pred.rowNumber, newRow);
             }
         }
-        ArrayList<ArrayList<Prediction>> groupedRows = new ArrayList<ArrayList<Prediction>>(grouped.values());
+        List<List<Prediction>> groupedRows = new ArrayList<>(grouped.values());
         return groupedRows;
     }
 
