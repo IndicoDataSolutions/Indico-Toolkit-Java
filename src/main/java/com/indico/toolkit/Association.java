@@ -1,6 +1,7 @@
 package com.indico.toolkit;
 
-import com.indico.toolkit.Prediction;
+import com.indico.toolkit.types.Prediction;
+import com.indico.toolkit.types.Token;
 
 import java.util.*;
 import java.lang.Math;

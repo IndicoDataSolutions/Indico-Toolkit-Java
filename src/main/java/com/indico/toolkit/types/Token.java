@@ -1,7 +1,4 @@
-package com.indico.toolkit;
-
-import com.indico.toolkit.Position;
-import com.indico.toolkit.DocOffset;
+package com.indico.toolkit.types;
 
 
 public class Token implements Comparable<Token>{

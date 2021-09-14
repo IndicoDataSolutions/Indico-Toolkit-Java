@@ -1,8 +1,9 @@
 package com.indico.toolkit;
 
-import com.indico.toolkit.Association;
-import com.indico.toolkit.Prediction;
-import com.indico.toolkit.Token;
+import com.indico.toolkit.types.DocOffset;
+import com.indico.toolkit.types.Prediction;
+import com.indico.toolkit.types.Token;
+
 
 import com.google.gson.Gson;
 
@@ -15,6 +16,8 @@ import java.util.List;
 
 import java.lang.Integer;
 import java.lang.reflect.Type;
+
+
 import com.google.gson.reflect.TypeToken;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

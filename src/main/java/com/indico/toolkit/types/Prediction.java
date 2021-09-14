@@ -1,4 +1,4 @@
-package com.indico.toolkit;
+package com.indico.toolkit.types;
 
 public class Prediction implements Comparable<Prediction>{
     public int start;

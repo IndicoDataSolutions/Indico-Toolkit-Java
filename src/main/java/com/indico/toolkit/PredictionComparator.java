@@ -1,6 +1,7 @@
 package com.indico.toolkit;
 import java.util.Comparator;
 
+import com.indico.toolkit.types.Prediction;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 
 public class PredictionComparator implements Comparator<Prediction> {
